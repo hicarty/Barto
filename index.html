@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Integrate Promotions</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,300;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#07111a;--card:#0f1c28;--card2:#142232;
+  --y:#FFD600;--y2:#FFE566;--o:#FF6B1A;--o2:#FF9255;--tl:#4dd9c0;
+  --tx:#e8f4ff;--tx2:#7a9ab0;--bd:rgba(255,255,255,0.07);
+  --grad:linear-gradient(135deg,#FFD600,#FF6B1A);
+}
+html{scroll-behavior:smooth;scroll-snap-type:y proximity}
+body{background:var(--bg);color:var(--tx);font-family:'DM Sans',sans-serif;overflow-x:hidden}
+#stars-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+.gt{background:linear-gradient(110deg,var(--y),var(--o));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 3rem;background:rgba(7,17,26,.6);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.05)}
+.nav-logo{display:flex;align-items:center;gap:.6rem;cursor:pointer;background:none;border:0;color:inherit;font:inherit}
+.logo-mark{width:34px;height:34px;border-radius:9px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:900;font-size:.82rem;color:#1a0a00}
+.logo-txt{font-size:.95rem;font-weight:600;letter-spacing:-.01em}
+.logo-txt em{font-style:normal}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links button{background:none;border:0;font:inherit;font-size:.82rem;color:var(--tx2);cursor:pointer;transition:color .2s}
+.nav-links button:hover{color:var(--y)}
+.nav-cta{font:inherit;font-size:.8rem;font-weight:600;padding:.5rem 1.3rem;border-radius:7px;border:0;background:var(--grad);color:#1a0a00;cursor:pointer;white-space:nowrap;transition:opacity .2s}
+.nav-cta:hover{opacity:.88}
+
+/* SECTIONS */
+main{position:relative;z-index:1}
+section{min-height:100vh;scroll-snap-align:start;display:flex;align-items:center;justify-content:center;padding:96px 3rem 72px;position:relative}
+.kicker{font-size:.74rem;color:var(--y);font-weight:500;letter-spacing:.06em;display:block;margin-bottom:.7rem;text-transform:uppercase}
+.kicker.o{color:var(--o)}
+h1{font-family:'Fraunces',serif;font-size:clamp(3rem,7.5vw,6.5rem);font-weight:900;line-height:1.02;letter-spacing:-.03em;color:#fff;margin-bottom:1.2rem}
+h1 em,h2 em{font-style:italic;font-weight:300}
+h2{font-family:'Fraunces',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:700;letter-spacing:-.025em;line-height:1.15;color:var(--tx)}
+.lede{font-size:.92rem;color:var(--tx2);line-height:1.78;font-weight:300;max-width:620px;margin:1rem auto 0}
+
+/* HERO */
+.hero{flex-direction:column;text-align:center}
+.hero-badge{display:inline-flex;align-items:center;gap:.45rem;font-size:.75rem;font-weight:500;letter-spacing:.03em;padding:.38rem 1rem;border-radius:20px;border:1px solid rgba(255,214,0,.28);background:rgba(255,214,0,.07);color:var(--y);margin-bottom:2rem}
+.hero-badge::before{content:'✦';font-size:.6rem}
+.hero-role{font-size:.9rem;color:var(--tx2);letter-spacing:.04em;margin-bottom:1.4rem;font-weight:300}
+.hero-body{font-size:clamp(.88rem,1.6vw,.97rem);color:rgba(232,244,255,.68);max-width:580px;line-height:1.78;font-weight:300;margin:0 auto 2.4rem}
+.btns{display:flex;gap:.9rem;justify-content:center;flex-wrap:wrap;margin-bottom:2.4rem}
+.btn-y{font:inherit;font-weight:600;font-size:.86rem;padding:.75rem 1.9rem;border-radius:8px;border:0;background:var(--grad);color:#1a0a00;cursor:pointer;text-decoration:none;transition:transform .2s,box-shadow .2s}
+.btn-y:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,107,26,.35)}
+.btn-outline{font:inherit;font-size:.86rem;padding:.75rem 1.9rem;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:none;color:var(--tx);cursor:pointer;text-decoration:none;transition:border-color .2s,color .2s}
+.btn-outline:hover{border-color:var(--y);color:var(--y)}
+.hero-pills{display:flex;gap:2rem;justify-content:center;flex-wrap:wrap}
+.hpill{font-size:.78rem;color:rgba(232,244,255,.5);display:flex;align-items:center;gap:.45rem}
+.hpill::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--y)}
+.hpill:nth-child(2)::before{background:var(--o)}
+.hpill:nth-child(3)::before{background:var(--y2)}
+
+/* STREAMS */
+.wrap{max-width:1080px;width:100%}
+.center{text-align:center}
+.streams{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;margin-top:2.6rem}
+.stream{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:2rem;position:relative;overflow:hidden;transition:border-color .25s,transform .25s}
+.stream:hover{transform:translateY(-3px)}
+.stream.y:hover{border-color:rgba(255,214,0,.28)}
+.stream.o:hover{border-color:rgba(255,107,26,.3)}
+.stream::after{content:'';position:absolute;width:220px;height:220px;border-radius:50%;pointer-events:none;bottom:-90px;right:-90px}
+.stream.y::after{background:radial-gradient(circle,rgba(255,214,0,.13),transparent 70%)}
+.stream.o::after{background:radial-gradient(circle,rgba(255,107,26,.15),transparent 70%)}
+.stream-tag{font-size:.65rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;padding:.25rem .75rem;border-radius:20px;display:inline-block;margin-bottom:1.1rem}
+.stream.y .stream-tag{color:var(--y);border:1px solid rgba(255,214,0,.3);background:rgba(255,214,0,.06)}
+.stream.o .stream-tag{color:var(--o);border:1px solid rgba(255,107,26,.3);background:rgba(255,107,26,.06)}
+.stream h3{font-family:'Fraunces',serif;font-size:1.5rem;font-weight:700;line-height:1.2;color:#fff;margin-bottom:.7rem;letter-spacing:-.015em}
+.stream p{font-size:.84rem;color:var(--tx2);line-height:1.7;font-weight:300;margin-bottom:1.4rem}
+.stream ul{list-style:none;display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.5rem}
+.stream li{font-size:.8rem;color:rgba(232,244,255,.75);font-weight:300;display:flex;gap:.6rem;line-height:1.5}
+.stream li::before{content:'✦';font-size:.6rem;padding-top:.3rem}
+.stream.y li::before{color:var(--y)}
+.stream.o li::before{color:var(--o)}
+.partners-label{font-size:.66rem;color:var(--tx2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.7rem}
+.partners{display:flex;flex-wrap:wrap;gap:.6rem}
+.partner{font-family:'Fraunces',serif;font-weight:700;font-size:.95rem;padding:.55rem 1rem;border-radius:9px;background:var(--card2);border:1px solid var(--bd);color:#fff}
+
+/* SERVICES */
+.svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.05);border-radius:14px;overflow:hidden;margin-top:2.4rem;border:1px solid var(--bd)}
+.svc-card{background:var(--card);padding:1.8rem;position:relative;overflow:hidden;transition:background .25s;display:flex;flex-direction:column}
+.svc-card:hover{background:var(--card2)}
+.svc-card::after{content:'';position:absolute;width:160px;height:160px;border-radius:50%;opacity:0;transition:opacity .4s;pointer-events:none}
+.svc-card:nth-child(odd)::after{background:radial-gradient(circle,rgba(255,214,0,.14),transparent 70%);bottom:-50px;right:-50px}
+.svc-card:nth-child(even)::after{background:radial-gradient(circle,rgba(255,107,26,.14),transparent 70%);top:-50px;left:-50px}
+.svc-card:hover::after{opacity:1}
+.svc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.2rem}
+.svc-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem}
+.ic-y{background:linear-gradient(135deg,rgba(255,214,0,.2),rgba(255,107,26,.1))}
+.ic-o{background:linear-gradient(135deg,rgba(255,107,26,.2),rgba(255,214,0,.1))}
+.svc-badge{font-size:.65rem;font-weight:500;letter-spacing:.03em;padding:.22rem .7rem;border-radius:20px;border:1px solid var(--bd);color:var(--tx2)}
+.svc-card h3{font-family:'Fraunces',serif;font-size:1.05rem;font-weight:700;line-height:1.25;margin-bottom:.6rem;color:#fff}
+.svc-card p{font-size:.79rem;color:var(--tx2);line-height:1.68;font-weight:300}
+
+/* HOW */
+.how{display:grid;grid-template-columns:1.1fr 1fr;gap:4rem;align-items:center}
+.how-body{font-size:.86rem;color:var(--tx2);line-height:1.8;font-weight:300;margin:1rem 0 1.8rem;max-width:440px}
+.steps{display:flex;flex-direction:column;gap:.75rem;margin-bottom:2rem}
+.step{display:flex;gap:.75rem;padding:.9rem 1rem;background:var(--card);border:1px solid var(--bd);border-radius:9px;transition:border-color .2s}
+.step:hover{border-color:rgba(255,214,0,.22)}
+.step-num{font-family:'Fraunces',serif;font-size:1.1rem;font-weight:900;flex-shrink:0;line-height:1;padding-top:1px}
+.step h4{font-size:.85rem;font-weight:600;margin-bottom:.2rem}
+.step p{font-size:.76rem;color:var(--tx2);line-height:1.5;font-weight:300}
+.side{display:flex;flex-direction:column;gap:.9rem}
+.side-card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:1.3rem;position:relative;overflow:hidden;transition:border-color .25s,transform .25s}
+.side-card:hover{border-color:rgba(255,214,0,.22);transform:translateY(-2px)}
+.side-card .lbl{font-size:.65rem;color:var(--y);font-weight:500;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.4rem;display:block}
+.side-card .lbl.o{color:var(--o)}
+.side-card .lbl.t{color:var(--tl)}
+.side-card p{font-size:.79rem;color:var(--tx2);line-height:1.6;font-weight:300}
+.glow{position:absolute;bottom:-30px;right:-30px;width:80px;height:80px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,rgba(255,214,0,.15),transparent 70%)}
+
+/* CTA */
+.cta{max-width:680px;text-align:center}
+.cta h2{font-size:clamp(2.4rem,5vw,4rem);margin-bottom:1.1rem}
+.cta p{font-size:.92rem;color:var(--tx2);line-height:1.78;max-width:480px;margin:0 auto 2.2rem;font-weight:300}
+.cta-meta{font-size:.78rem;color:var(--tx2)}
+.cta-meta span{color:var(--y)}
+
+.footer-strip{position:relative;z-index:1;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 3rem;border-top:1px solid rgba(255,255,255,.05);font-size:.7rem;color:var(--tx2)}
+
+@media(max-width:900px){
+  .nav-links{display:none}
+  .nav{padding:0 1.25rem}
+  section{padding:88px 1.25rem 56px}
+  .streams,.how{grid-template-columns:1fr;gap:1.4rem}
+  .svc-grid{grid-template-columns:1fr}
+  .footer-strip{padding:0 1.25rem;flex-direction:column;justify-content:center;gap:.2rem;height:auto;padding-block:1rem}
+}
+</style>
+</head>
+<body>
+
+<canvas id="stars-canvas"></canvas>
+
+<nav class="nav">
+  <button class="nav-logo" data-go="top" aria-label="Back to top">
+    <div class="logo-mark">iP</div>
+    <span class="logo-txt">Integrate <em class="gt">Promotions</em></span>
+  </button>
+  <ul class="nav-links">
+    <li><button data-go="streams">Acquisition</button></li>
+    <li><button data-go="services">Services</button></li>
+    <li><button data-go="how">How it works</button></li>
+    <li><button data-go="contact">Contact</button></li>
+  </ul>
+  <button class="nav-cta" data-go="contact">Partner with us</button>
+</nav>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <div class="hero-badge">Sales &amp; Fundraising Acquisition</div>
+    <h1>Integrate<br><em class="gt">Promotions</em></h1>
+    <p class="hero-role">Outbound Sales · Brand Ambassador Acquisition · Product Distribution</p>
+    <p class="hero-body">We acquire customers and supporters across sectors. We run for-profit sales for software and media partners, and brand ambassador acquisition for fundraising partners with pre-allocated budgets.</p>
+    <div class="btns">
+      <button class="btn-y" data-go="contact">Partner with us →</button>
+      <button class="btn-outline" data-go="streams">See our partners</button>
+    </div>
+    <div class="hero-pills">
+      <span class="hpill">Cross-sector sales</span>
+      <span class="hpill">Fundraising acquisition</span>
+      <span class="hpill">Product distribution</span>
+    </div>
+  </section>
+
+  <!-- STREAMS -->
+  <section id="streams">
+    <div class="wrap">
+      <div class="center">
+        <span class="kicker">Two acquisition streams</span>
+        <h2>One team, <em class="gt">two ways</em> to grow</h2>
+        <p class="lede">Commercial sales and charitable fundraising follow different rules, so we run them as separate streams with their own processes and compliance.</p>
+      </div>
+      <div class="streams">
+        <div class="stream y">
+          <span class="stream-tag">For-profit sales</span>
+          <h3>Cross-sector sales acquisition</h3>
+          <p>Outbound prospecting and product distribution for software and media businesses. We get products in front of buyers, qualify interest, and hand warm leads to the partner to close.</p>
+          <ul>
+            <li>Outbound prospecting and proposals on the partner's behalf</li>
+            <li>Distribution from finished MVP to first paying customers</li>
+            <li>Paid on commission, finder's fee or margin on the first fixed term</li>
+          </ul>
+          <div class="partners-label">Sales partners</div>
+          <div class="partners">
+            <span class="partner">Media Mace</span>
+            <span class="partner">Common Sense Network</span>
+            <span class="partner">FlyWheelOS</span>
+          </div>
+        </div>
+        <div class="stream o">
+          <span class="stream-tag">Fundraising</span>
+          <h3>Brand ambassador acquisition</h3>
+          <p>Face-to-face supporter acquisition for fundraising partners with pre-allocated fundraising budgets. Brand ambassadors engage the public and sign up regular supporters to the standards set by the partner and the sector.</p>
+          <ul>
+            <li>Campaigns run against a pre-allocated fundraising budget</li>
+            <li>Delivered to the Code of Fundraising Practice and UK GDPR</li>
+            <li>Measured on verified sign-ups and supporter retention</li>
+          </ul>
+          <div class="partners-label">Fundraising partners</div>
+          <div class="partners">
+            <span class="partner">Barto Group</span>
+            <span class="partner">Cluster Church</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="wrap">
+      <div class="center">
+        <span class="kicker">What we do</span>
+        <h2>Six ways we bring you <em class="gt">new business</em></h2>
+      </div>
+      <div class="svc-grid">
+        <div class="svc-card">
+          <div class="svc-top"><div class="svc-icon ic-y">📈</div><span class="svc-badge">Sales</span></div>
+          <h3>Outbound Sales Acquisition</h3>
+          <p>Targeted outbound prospecting across sectors, with proposals sent on your behalf and every lead qualified before it reaches you.</p>
+        </div>
+        <div class="svc-card">
+          <div class="svc-top"><div class="svc-icon ic-o">🚀</div><span class="svc-badge">Distribution</span></div>
+          <h3>Product Distribution</h3>
+          <p>We take software products from finished MVP to first paying customers by putting them in front of the buyers who need them.</p>
+        </div>
+        <div class="svc-card">
+          <div class="svc-top"><div class="svc-icon ic-y">✦</div><span class="svc-badge">Fundraising</span></div>
+          <h3>Brand Ambassador Acquisition</h3>
+          <p>Face-to-face supporter acquisition for partners with pre-allocated fundraising budgets, delivered by trained, compliant brand ambassadors.</p>
+        </div>
+        <div class="svc-card">
+          <div class="svc-top"><div class="svc-icon ic-o">🤝</div><span class="svc-badge">Handover</span></div>
+          <h3>Warm Lead Handover</h3>
+          <p>We generate and qualify the leads, and you close the deal directly, keeping the customer relationship where it belongs.</p>
+        </div>
+        <div class="svc-card">
+          <div class="svc-top"><div class="svc-icon ic-y">🎓</div><span class="svc-badge">Teams</span></div>
+          <h3>Rep &amp; Ambassador Training</h3>
+          <p>We train reps and ambassadors on KPIs, objection handling, gatekeepers and contract negotiation, so every campaign starts strong.</p>
+        </div>
+        <div class="svc-card">
+          <div class="svc-top"><div class="svc-icon ic-o">🎬</div><span class="svc-badge">Experience</span></div>
+          <h3>Brand Experience &amp; Events</h3>
+          <p>Events, UX workshops and brand activations that put your product or cause in the room with the right audience.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how">
+    <div class="wrap how">
+      <div>
+        <span class="kicker o">How it works</span>
+        <h2>From brief to <em class="gt">verified result</em></h2>
+        <p class="how-body">Every engagement follows the same three steps. We agree the target and budget, run the acquisition, and hand over results you can check.</p>
+        <div class="steps">
+          <div class="step">
+            <span class="step-num gt">01</span>
+            <div><h4>Brief &amp; budget</h4><p>We agree the product or cause, the audience, the targets and the budget, whether that's a sales commission model or a pre-allocated fundraising budget.</p></div>
+          </div>
+          <div class="step">
+            <span class="step-num gt">02</span>
+            <div><h4>Acquire</h4><p>Outbound sales for commercial partners and face-to-face ambassador campaigns for fundraising partners, each run to its own standards.</p></div>
+          </div>
+          <div class="step">
+            <span class="step-num gt">03</span>
+            <div><h4>Verify &amp; hand over</h4><p>Qualified leads go to your sales team to close, and fundraising sign-ups are verified before they count.</p></div>
+          </div>
+        </div>
+        <div class="btns" style="justify-content:flex-start;margin-bottom:0">
+          <button class="btn-y" data-go="contact">Start a campaign →</button>
+        </div>
+      </div>
+      <div class="side">
+        <div class="side-card">
+          <span class="lbl">The handover model</span>
+          <p>We find and qualify, and you close. Partners keep the customer relationship and pay for results, not for headcount.</p>
+          <div class="glow"></div>
+        </div>
+        <div class="side-card">
+          <span class="lbl o">Compliance first</span>
+          <p>Fundraising follows the Code of Fundraising Practice, the Charities Acts and UK GDPR. Vulnerable people are protected, and no one is pressured.</p>
+          <div class="glow" style="background:radial-gradient(circle,rgba(255,107,26,.15),transparent 70%)"></div>
+        </div>
+        <div class="side-card">
+          <span class="lbl t">Independent &amp; cross-sector</span>
+          <p>Integrate is an independent business. Running media, software and fundraising work side by side lets us share what works across sectors.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="contact">
+    <div class="cta">
+      <span class="kicker">Work with us</span>
+      <h2>Let's grow your<br><em class="gt">customers &amp; supporters.</em></h2>
+      <p>Tell us about your product or cause, your audience and your budget, and we'll come back with an acquisition plan.</p>
+      <div class="btns">
+        <a href="mailto:havencarty@proton.me?subject=Integrate%20Promotions%20enquiry" class="btn-y">Email Integrate Promotions →</a>
+      </div>
+      <p class="cta-meta"><span>havencarty@proton.me</span> · UK &amp; Ireland</p>
+    </div>
+  </section>
+
+</main>
+
+<div class="footer-strip">
+  <span>© 2026 Integrate Promotions · Haven Carty</span>
+  <span>havencarty@proton.me</span>
+</div>
+
+<script>
+/* in-page navigation */
+document.querySelectorAll('[data-go]').forEach(el=>{
+  el.addEventListener('click',()=>{
+    const t=document.getElementById(el.dataset.go);
+    if(t) t.scrollIntoView({behavior:'smooth'});
+  });
+});
+
+/* shooting stars: yellow and orange */
+const cv=document.getElementById('stars-canvas');
+const cx=cv.getContext('2d');
+let W,H;
+function resize(){W=cv.width=window.innerWidth;H=cv.height=window.innerHeight;}
+resize();window.addEventListener('resize',resize);
+const YELLOW=[255,214,0],ORANGE=[255,107,26];
+const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+class Star{
+  constructor(f){this.reset(f);}
+  reset(f){
+    if(Math.random()>.4){this.x=-80-Math.random()*200;this.y=Math.random()*H*.8;}else{this.x=Math.random()*W*.6;this.y=-60-Math.random()*100;}
+    const a=Math.PI/6+Math.random()*(Math.PI/8),s=3.5+Math.random()*5;
+    this.vx=Math.cos(a)*s;this.vy=Math.sin(a)*s;this.len=80+Math.random()*180;
+    this.rgb=Math.random()>.45?YELLOW:ORANGE;this.alpha=.7+Math.random()*.3;this.width=1.5+Math.random()*2.5;
+    if(f){this.x=Math.random()*W;this.y=Math.random()*H*.5;}
+  }
+  tick(){this.x+=this.vx;this.y+=this.vy;if(this.x>W+200||this.y>H+200)this.reset();}
+  draw(){const m=Math.hypot(this.vx,this.vy),tx=this.x-this.vx/m*this.len,ty=this.y-this.vy/m*this.len,[r,g,b]=this.rgb;
+    const gr=cx.createLinearGradient(tx,ty,this.x,this.y);
+    gr.addColorStop(0,`rgba(${r},${g},${b},0)`);gr.addColorStop(.6,`rgba(${r},${g},${b},${this.alpha*.4})`);gr.addColorStop(1,`rgba(${r},${g},${b},${this.alpha})`);
+    cx.beginPath();cx.moveTo(tx,ty);cx.lineTo(this.x,this.y);cx.strokeStyle=gr;cx.lineWidth=this.width;cx.lineCap='round';cx.stroke();
+    const hg=cx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.width*5);
+    hg.addColorStop(0,`rgba(${r},${g},${b},1)`);hg.addColorStop(.4,`rgba(${r},${g},${b},.6)`);hg.addColorStop(1,`rgba(${r},${g},${b},0)`);
+    cx.beginPath();cx.arc(this.x,this.y,this.width*5,0,Math.PI*2);cx.fillStyle=hg;cx.fill();
+    cx.beginPath();cx.arc(this.x,this.y,this.width*.8,0,Math.PI*2);cx.fillStyle=`rgba(255,255,240,${this.alpha})`;cx.fill();}
+}
+const stars=Array.from({length:6},(_,i)=>{const s=new Star(true);const o=(i/6)*1.2;s.x+=s.vx*60*o;s.y+=s.vy*60*o;return s;});
+let spawn=0;
+function frame(){
+  cx.fillStyle='rgba(7,17,26,0.28)';cx.fillRect(0,0,W,H);
+  if(++spawn>120+Math.random()*180){spawn=0;stars[Math.floor(Math.random()*stars.length)].reset();}
+  stars.forEach(s=>{s.tick();s.draw();});
+  requestAnimationFrame(frame);
+}
+if(reduce){cx.fillStyle='#07111a';cx.fillRect(0,0,W,H);}
+else frame();
+</script>
+</body>
+</html>
