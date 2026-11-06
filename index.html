@@ -123,6 +123,22 @@ h2{font-family:'Fraunces',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight
 .cta-meta{font-size:.78rem;color:var(--tx2)}
 .cta-meta span{color:var(--y)}
 
+/* RECENT WIN */
+.win{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:3.5rem;align-items:center}
+.win-photo{position:relative;margin:0;border-radius:16px;overflow:hidden;border:1px solid rgba(255,214,0,.22);aspect-ratio:1/1;max-width:440px;width:100%;justify-self:center;box-shadow:0 24px 60px rgba(0,0,0,.45),0 0 0 6px rgba(255,214,0,.04)}
+.win-photo img{display:block;width:100%;height:100%;object-fit:cover}
+.win-photo::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,transparent 60%,rgba(7,17,26,.55))}
+.win-copy p.win-body{font-size:.9rem;color:var(--tx2);line-height:1.8;font-weight:300;margin:1rem 0 1.6rem;max-width:520px}
+.win-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.7rem;margin-bottom:1.6rem}
+.win-fact{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:.85rem 1rem}
+.win-fact .lbl{display:block;font-size:.62rem;letter-spacing:.07em;text-transform:uppercase;color:var(--tx2);margin-bottom:.3rem}
+.win-fact b{font-family:'Fraunces',serif;font-weight:700;font-size:1rem;color:#fff}
+.win-quote{position:relative;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:1.5rem 1.6rem;overflow:hidden}
+.win-quote::before{content:'“';position:absolute;top:-.6rem;left:1rem;font-family:'Fraunces',serif;font-size:4.5rem;line-height:1;color:var(--y);opacity:.35}
+.win-quote blockquote{font-family:'Fraunces',serif;font-style:italic;font-weight:300;font-size:1.05rem;line-height:1.6;color:var(--tx);margin:0 0 1rem;padding-top:.6rem}
+.win-quote figcaption{font-size:.78rem;color:var(--tx2)}
+.win-quote figcaption b{color:var(--y);font-weight:600}
+
 .footer-strip{position:relative;z-index:1;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 3rem;border-top:1px solid rgba(255,255,255,.05);font-size:.7rem;color:var(--tx2)}
 
 @media(max-width:900px){
@@ -131,6 +147,8 @@ h2{font-family:'Fraunces',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight
   section{padding:88px 1.25rem 56px}
   .streams,.how{grid-template-columns:1fr;gap:1.4rem}
   .svc-grid{grid-template-columns:1fr}
+  .win{grid-template-columns:1fr;gap:2rem}
+  .win-facts{grid-template-columns:1fr 1fr}
   .footer-strip{padding:0 1.25rem;flex-direction:column;justify-content:center;gap:.2rem;height:auto;padding-block:1rem}
 }
 </style>
@@ -148,6 +166,7 @@ h2{font-family:'Fraunces',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight
     <li><button data-go="streams">Acquisition</button></li>
     <li><button data-go="services">Services</button></li>
     <li><button data-go="how">How it works</button></li>
+    <li><button data-go="results">Results</button></li>
     <li><button data-go="contact">Contact</button></li>
   </ul>
   <button class="nav-cta" data-go="contact">Partner with us</button>
@@ -195,6 +214,7 @@ h2{font-family:'Fraunces',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight
             <span class="partner">Media Mace</span>
             <span class="partner">Common Sense Network</span>
             <span class="partner">FlyWheelOS</span>
+            <span class="partner">AdMyScreen</span>
           </div>
         </div>
         <div class="stream o">
@@ -298,6 +318,31 @@ h2{font-family:'Fraunces',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight
           <span class="lbl t">Independent &amp; cross-sector</span>
           <p>Integrate is an independent business. Running media, software and fundraising work side by side lets us share what works across sectors.</p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RECENT WIN -->
+  <section id="results">
+    <div class="wrap win">
+      <figure class="win-photo">
+        <img src="images/admyscreen-elonex.jpg" alt="Six people standing together on a London pavement in front of a red double-decker bus" width="367" height="367" loading="lazy">
+      </figure>
+      <div class="win-copy">
+        <span class="kicker">Recent win</span>
+        <h2>AdMyScreen <em class="gt">× Elonex</em></h2>
+        <p class="win-body">Haven Carty of Integrate introduced the lead, and AdMyScreen's team took it from there to a contract with Elonex. It's the handover model in action: we find the opportunity, and our partner closes it and keeps the relationship.</p>
+        <div class="win-facts">
+          <div class="win-fact"><span class="lbl">Partner</span><b>AdMyScreen</b></div>
+          <div class="win-fact"><span class="lbl">Client</span><b>Elonex</b></div>
+          <div class="win-fact"><span class="lbl">Our role</span><b>Lead introduction</b></div>
+        </div>
+        <!-- TESTIMONIAL: paste Yax Francisco's approved words into the blockquote, then remove the two comment lines around this figure.
+        <figure class="win-quote">
+          <blockquote>[Yax's approved quote]</blockquote>
+          <figcaption><b>Yax Francisco</b> · Director, AdMyScreen</figcaption>
+        </figure>
+        -->
       </div>
     </div>
   </section>
